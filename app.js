@@ -29,8 +29,6 @@ function createPreview(pdf, name) {
   for (let i = 0; i < pageCount; i++) {
     const pageThumbnail = document.createElement('canvas');
     pageThumbnail.className = 'page-thumbnail';
-
-    // ページ番号をデータ属性として保持
     pageThumbnail.dataset.pageIndex = i;
 
     const pdfjsLib = window['pdfjs-dist/build/pdf'];
@@ -48,8 +46,6 @@ function createPreview(pdf, name) {
 
     preview.appendChild(pageThumbnail);
   }
-
-  // 並べ替え可能にする
   new Sortable(preview, {
     animation: 150,
   });
@@ -57,7 +53,7 @@ function createPreview(pdf, name) {
 
 mergeBtn.addEventListener('click', async () => {
   try {
-    if (loadedPdfs.length === 0) return alert('PDFファイルをアップロードしてください！');
+    if (loadedPdfs.length === 0) return alert('PDFファイルをアップロードしろ!');
     const mergedPdf = await PDFDocument.create();
     for (const pdf of loadedPdfs) {
       const pages = await mergedPdf.copyPages(pdf, pdf.getPageIndices());
@@ -66,13 +62,13 @@ mergeBtn.addEventListener('click', async () => {
     downloadPdf(mergedPdf, 'merged_output.pdf');
   } catch (error) {
     console.error(error);
-    alert('PDFの結合中にエラーが発生しました。');
+    alert('PDFの結合に失敗しちゃった...');
   }
 });
 
 splitBtn.addEventListener('click', async () => {
   try {
-    if (loadedPdfs.length === 0) return alert('ファイルをアップロードしてください！');
+    if (loadedPdfs.length === 0) return alert('ファイルをアップロードしろ!');
     const pdf = loadedPdfs[0];
     const zip = new JSZip();
     for (let i = 0; i < pdf.getPageCount(); i++) {
@@ -92,20 +88,19 @@ splitBtn.addEventListener('click', async () => {
     });
   } catch (error) {
     console.error(error);
-    alert('PDFの分割中にエラーが発生しました。');
+    alert('PDFの分割に失敗しちゃった...');
   }
 });
 
 reorderBtn.addEventListener('click', async () => {
   try {
     if (loadedPdfs.length === 0) {
-      return alert('ファイルをアップロードしてください！');
+      return alert('ファイルをアップロードしたぁ?');
     }
 
     const pdf = loadedPdfs[0];
     const reorderedPdf = await PDFDocument.create();
 
-    // サムネイルの並び順から`reorderedIndices`を生成
     const thumbnails = Array.from(preview.children);
     reorderedIndices = thumbnails.map((thumbnail) => parseInt(thumbnail.dataset.pageIndex, 10));
 
@@ -114,7 +109,6 @@ reorderBtn.addEventListener('click', async () => {
       return;
     }
 
-    // 並べ替えた順序でページをコピー
     for (const i of reorderedIndices) {
       const [page] = await reorderedPdf.copyPages(pdf, [i]);
       reorderedPdf.addPage(page);
@@ -123,7 +117,7 @@ reorderBtn.addEventListener('click', async () => {
     downloadPdf(reorderedPdf, 'reordered_output.pdf');
   } catch (error) {
     console.error(error);
-    alert('ページの並び替え中にエラーが発生しました。');
+    alert('ページの並び替え中にエラーが発生したようです...');
   }
 });
 
